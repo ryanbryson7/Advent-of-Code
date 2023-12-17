@@ -145,10 +145,9 @@ def getNextDirections(nodes, nodeIn, directionIn):
 def hasNodeBeenSeen(node):
     return node.directions[0] or node.directions[1] or node.directions[2] or node.directions[3]
 
-def main(fileName):
-    nodes = createNodes(fileName)
-    startNode = nodes[0][0]
-    startDir,_ = getNextDirections(nodes, startNode, direction.RIGHT)
+def evaluate(nodes, initDir, row, column):
+    startNode = nodes[row][column]
+    startDir,_ = getNextDirections(nodes, startNode, initDir)
     startNode.directions[startDir.value] = 1
     count = 0
     didUpdate = True
@@ -168,7 +167,7 @@ def main(fileName):
                             # check if direction has been taken before
                             if dirNode.directions[direction1.value] == 0 or (direction2 != None and dirNode.directions[direction2.value] == 0):
                                 didUpdate = True
-                                if debug: print(dirNode.shape, end="\n")
+                                # if debug: print(dirNode.shape, end="\n")
 
                             dirNode.directions[direction1.value] = 1
                             if direction2 != None: dirNode.directions[direction2.value] = 1
@@ -178,7 +177,56 @@ def main(fileName):
         for nodeIndex in range(0, len(nodes[rowIndex])):
             currentNode = nodes[rowIndex][nodeIndex]
             if hasNodeBeenSeen(nodes[rowIndex][nodeIndex]): count += 1
-    print(count)
+    return count
+
+def main(fileName):
+    nodes = createNodes(fileName)
+    highScore = 0
+    # Top row
+    print("starting top row")
+    row = 0
+    for column in range(0, len(nodes[row])):
+        print("Column {0}".format(column))
+        nodes = createNodes(fileName)
+        count = evaluate(nodes, direction.DOWN, row, column)
+        if count > highScore: 
+            print("New high score: {0}".format(count))
+            highScore = count
+
+    # Bottom row
+    print("starting bottom row")
+    row = len(nodes) - 1
+    for column in range(0, len(nodes[row])):
+        print("Column {0}".format(column))
+        nodes = createNodes(fileName)
+        count = evaluate(nodes, direction.UP, row, column)
+        if count > highScore: 
+            print("New high score: {0}".format(count))
+            highScore = count
+
+    # Left Column
+    print("starting left column")
+    column = 0
+    for row in range(0, len(nodes)):
+        print("Row {0}".format(row))
+        nodes = createNodes(fileName)
+        count = evaluate(nodes, direction.RIGHT, row, column)
+        if count > highScore: 
+            print("New high score: {0}".format(count))
+            highScore = count
+
+    # Right Column
+    print("starting right column")
+    column = len(nodes[0]) - 1
+    for row in range(0, len(nodes)):
+        print("Row {0}".format(row))
+        nodes = createNodes(fileName)
+        count = evaluate(nodes, direction.LEFT, row, column)
+        if count > highScore: 
+            print("New high score: {0}".format(count))
+            highScore = count
+
+    print(highScore)
 
 debug=0
 main(".\\12-16-2023\\input.txt")
