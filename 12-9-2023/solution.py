@@ -11,6 +11,7 @@ def GetNextReadingValue(inputArray):
 
     # Get next value, add to array
     nextValue = inputArray[len(inputArray) - 1] + nextDifference
+
     return nextValue
 
 def IsArrayZeros(inputArray):
@@ -18,7 +19,7 @@ def IsArrayZeros(inputArray):
         if value != 0: return False
     return True
 
-def main(fileName):
+def main(fileName, part):
     # Setup
     file = open(fileName, "r")
     summation = 0
@@ -33,7 +34,9 @@ def main(fileName):
         # Convert data to integers
         for reading in readingsDirty:
             readings.append(int(reading))
-        
+
+        if part == 2: readings.reverse()
+
         nextReadings.append(GetNextReadingValue(readings))
 
     # Add next reading values together
@@ -44,7 +47,7 @@ def main(fileName):
     print("Sum of values: {0}".format(summation))
 
 debug=1
-main(".\\12-9-2023\\input.txt")
+main(".\\12-9-2023\\input.txt", 2)
 
 # Recursive Algorithm GetNextReading(inputArray):
     # Base case: If inputArray is all 0's, return 0
@@ -52,3 +55,6 @@ main(".\\12-9-2023\\input.txt")
         # Create array of differences "difAry"
         # Call GetNextReading(difAry)
         # Return next value using result of ^ and last value of inputArray
+
+# Part 2:
+    # Just reverse the readings Array before computing next values
